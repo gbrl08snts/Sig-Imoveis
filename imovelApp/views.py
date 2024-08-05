@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
-from imovelApp.forms import ClientForm
-from imovelApp.models import Immobile
+from imovelApp.forms import ClientForm, ImmobileForm
+from imovelApp.models import Immobile, ImmobileImage
 
 # Create your views here.
 
@@ -19,3 +19,19 @@ def form_client(request):
             form.save()
             return redirect('list-location')
     return render(request, 'form-client.html', {'form': form})
+
+
+def form_immobile(request):
+    form = ImmobileForm()
+    if request.method == 'POST':
+        form = ImmobileForm(request.POST, request.FILES)
+        if form.is_valid():
+            immobile = form.save()
+            files = request.FILES.getlist('immobile')  # pega todas as imagens
+            if files:
+                for f in files:
+                    ImmobileImage.objects.create(  # cria instance para imagens
+                        immobile=immobile,
+                        image=f)
+            return redirect('list-location')
+    return render(request, 'form-immobile.html', {'form': form})
