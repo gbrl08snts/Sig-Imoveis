@@ -47,7 +47,7 @@
                 <p>Valor: {{immobile.price}}</p>   
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="badge bg-success">Tipo: {{immobile.type_item}}</div> 
-
+                    <a class="btn btn-primary" href="{% url 'location-create' immobile.id  %}">Locar</a>
                 </div>
             </div>  
 
