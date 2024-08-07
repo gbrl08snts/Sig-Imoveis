@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from imovelApp.forms import ClientForm, ImmobileForm
+from imovelApp.forms import ClientForm, ImmobileForm, RegisterLocationForm
 from imovelApp.models import Immobile, ImmobileImage
 
 # Create your views here.
@@ -35,3 +35,22 @@ def form_immobile(request):
                         image=f)
             return redirect('list-location')
     return render(request, 'form-immobile.html', {'form': form})
+
+
+def form_location(request, id):
+    get_locate = Immobile.objects.get(id=id)  # pega objeto
+    form = RegisterLocationForm()
+    if request.method == 'POST':
+        form = RegisterLocationForm(request.POST)
+        if form.is_valid():
+            location_form = form.save(commit=False)
+            location_form.immobile = get_locate  # salva id do imovel
+            location_form.save()
+            # muda status do imovel para "Alugado"
+            immo = Immobile.objects.get(id=id)
+            immo.is_locate = True  # passa ser True
+            immo.save()
+            # muda status do imovel para "Alugado" ???
+            return redirect('list-location')  # Retorna para lista
+    context = {'form': form, 'location': get_locate}
+    return render(request, 'form-location.html', context)
