@@ -6,6 +6,33 @@
 
 <div class="container"> 
     <div class="row g-3 align-items-center m-3 bg-light p-3"> 
+
+        <!-- Pesquisar pelo nome ou e-mail do cliente -->
+        <div class="col-auto">  
+            <label>Nome do Cliente ou E-mail</label>
+            <form class="d-flex" action="{% url 'reports' %}">
+                <input name="client" type="search" class="form-control me-2" placeholder="Pesquisar por cliente..." aria-label="Search">
+                <button class="btn btn-success" type="submit"><i class="fas fa-search"></i></button>
+            </form> 
+        </div>
+
+        <!-- Filter por Intervalo de data -->
+        <div class="col-auto">  
+            <form class="d-flex align-items-end" action="{% url 'reports' %}"> 
+                <div class="">
+                    <label for="">Inicio</label>
+                    <input name="dt_start" type="date" value="{{request.GET.dt_start}}" class="form-control me-2"> 
+                </div>
+                <div class="">
+                    <label for="">Final</label>
+                    <input name="dt_end" type="date" value="{{request.GET.dt_end}}" class="form-control me-2"> 
+                </div>
+                <div class="">
+                    <button class="btn btn-outline-dark" type="submit"><i class="fas fa-filter"></i></button> 
+                </div>
+            </form> 
+        </div>
+
         <!-- Filtrar pelo status do imóvel se está locado ou não locado -->
         <div class="col-auto">
             <form action="{% url 'reports' %}">
@@ -16,6 +43,19 @@
                     <option value="False" {% if request.GET.is_locate == 'False' %}selected{% endif %}>NÃO LOCADO</option> 
                 </select>
             </form>
+        </div>
+
+        <!-- Filter pelo tipo de imóvel -->
+        <div class="col-auto">
+            <form class="" action="{% url 'reports' %}">
+            <label>Tipo de Imóvel</label>
+                <select name="type_item" class="form-select" onchange="this.form.submit()">
+                    <option></option> 
+                    <option value="APARTAMENTO" {% if request.GET.type_item == 'APARTAMENTO' %}selected{% endif %}>APARTAMENTO</option>
+                    <option value="KITNET" {% if request.GET.type_item == 'KITNET' %}selected{% endif %}>KITNET</option>
+                    <option value="CASA" {% if request.GET.type_item == 'CASA' %}selected{% endif %}>CASA</option>
+                </select>
+            </form> 
         </div>
     
         <!-- Resetar estado dos filtros -->

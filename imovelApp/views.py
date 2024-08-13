@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from imovelApp.forms import ClientForm, ImmobileForm, RegisterLocationForm
 from imovelApp.models import Immobile, ImmobileImage
-
+from django.db.models import Q
 # Create your views here.
 
 
@@ -58,7 +58,19 @@ def form_location(request, id):
 
 def reports(request):  # Relatórios
     immobile = Immobile.objects.all()
+    client = request.GET.get('client')
+    dt_start = request.GET.get('dt_start')
+    dt_end = request.GET.get('dt_end')
+    type_item = request.GET.get('type_item')
     is_locate = request.GET.get('is_locate')
+    if client:  # Filtra por nome e email do cliente
+        immobile = Immobile.objects.filter(Q(reg_location__client__name__icontains=client) | Q(
+            reg_location__client__email__icontains=client))
+    if dt_start and dt_end:  # Por data
+        immobile = Immobile.objects.filter(
+            reg_location__create_at__range=[dt_start, dt_end])
+    if type_item:  # Tipo de Imovel
+        immobile = Immobile.objects.filter(type_item=type_item)
     if is_locate:  # Imovel foi locado ou não
         immobile = Immobile.objects.filter(is_locate=is_locate)
     return render(request, 'reports.html', {'immobiles': immobile})
